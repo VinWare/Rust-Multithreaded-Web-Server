@@ -6,7 +6,9 @@ use std::time::Duration;
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
 
-    listener.incoming().for_each(|stream| handle_connection(stream.unwrap()));
+    listener.incoming().for_each(|stream| {
+        thread::spawn(||handle_connection(stream.unwrap()));
+    });
 }
 
 fn handle_connection(mut stream: TcpStream) {
